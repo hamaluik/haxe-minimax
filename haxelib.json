@@ -1,0 +1,17 @@
+{
+    "name": "minimax",
+    "url": "https://github.com/FuzzyWuzzie/haxe-minimax",
+    "license": "Apache",
+    "classPath": "src",
+    "tags": [
+        "cross",
+        "utility"
+    ],
+    "description": "Simple library for implementing the Minimax algorithm",
+    "version": "0.1.0",
+    "releasenote": "Initial pre-release, nothing fancy though it seems to work.",
+    "contributors": [
+        "FuzzyWuzzie"
+    ],
+    "dependencies": {}
+}

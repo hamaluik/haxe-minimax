@@ -1,0 +1,7 @@
+-cp src
+-cp samples/tictactoe
+
+-dce full
+
+-main Main
+-js docs/samples/tictactoe/tictactoe.js

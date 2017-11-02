@@ -1,0 +1,12 @@
+-cp src
+
+minimax.Minimax
+minimax.MoveFunction
+minimax.Player
+minimax.ScoreFunction
+minimax.StateFunction
+
+-xml dox.xml
+
+--next
+-cmd haxelib run dox -i . -o docs --title "Minimax" --toplevel-package "minimax" -D version "0.1.0" -D source-path "https://github.com/FuzzyWuzzie/haxe-minimax/tree/master/src/minimax"
