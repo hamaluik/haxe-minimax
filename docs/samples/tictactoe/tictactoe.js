@@ -132,34 +132,91 @@ Mechanics.scoreFunction = function(state,player) {
 	}
 	var _g = 0;
 	while(_g < 3) {
-		var y = _g++;
-		if(state[y][0] == thisPlayer && state[y][1] == thisPlayer && state[y][2] == thisPlayer) {
-			return 1;
-		} else if(state[y][0] == otherPlayer && state[y][1] == otherPlayer && state[y][2] == otherPlayer) {
-			return -1;
+		var i = _g++;
+		if(state[i][0] == thisPlayer && state[i][1] == thisPlayer && state[i][2] == thisPlayer) {
+			return Infinity;
+		} else if(state[i][0] == otherPlayer && state[i][1] == otherPlayer && state[i][2] == otherPlayer) {
+			return -Infinity;
 		}
-	}
-	var _g1 = 0;
-	while(_g1 < 3) {
-		var x = _g1++;
-		if(state[0][x] == thisPlayer && state[1][x] == thisPlayer && state[2][x] == thisPlayer) {
-			return 1;
+		if(state[0][i] == thisPlayer && state[1][i] == thisPlayer && state[2][i] == thisPlayer) {
+			return Infinity;
 		}
-		if(state[0][x] == otherPlayer && state[1][x] == otherPlayer && state[2][x] == otherPlayer) {
-			return -1;
+		if(state[0][i] == otherPlayer && state[1][i] == otherPlayer && state[2][i] == otherPlayer) {
+			return -Infinity;
 		}
 	}
 	if(state[0][0] == thisPlayer && state[1][1] == thisPlayer && state[2][2] == thisPlayer) {
-		return 1;
+		return Infinity;
 	} else if(state[0][0] == otherPlayer && state[1][1] == otherPlayer && state[2][2] == otherPlayer) {
-		return -1;
+		return -Infinity;
 	}
 	if(state[0][2] == thisPlayer && state[1][1] == thisPlayer && state[2][0] == thisPlayer) {
-		return 1;
+		return Infinity;
 	} else if(state[0][2] == otherPlayer && state[1][1] == otherPlayer && state[2][0] == otherPlayer) {
-		return -1;
+		return -Infinity;
 	}
-	return 0;
+	var numAlmosts = 0;
+	var _g1 = 0;
+	while(_g1 < 3) {
+		var j = _g1++;
+		var numX = 0;
+		var numEmpty = 0;
+		var numO = 0;
+		var _g11 = 0;
+		while(_g11 < 3) {
+			var i1 = _g11++;
+			var _g2 = state[j][i1];
+			switch(_g2[1]) {
+			case 0:
+				++numEmpty;
+				break;
+			case 1:
+				++numX;
+				break;
+			case 2:
+				++numO;
+				break;
+			}
+		}
+		if(thisPlayer == BoardSpace.X && numX == 2 && numEmpty == 1) {
+			++numAlmosts;
+		} else if(thisPlayer == BoardSpace.X && numO == 2 && numEmpty == 1) {
+			--numAlmosts;
+		} else if(thisPlayer == BoardSpace.O && numO == 2 && numEmpty == 1) {
+			++numAlmosts;
+		} else if(thisPlayer == BoardSpace.O && numX == 2 && numEmpty == 1) {
+			--numAlmosts;
+		}
+		numX = 0;
+		numEmpty = 0;
+		numO = 0;
+		var _g12 = 0;
+		while(_g12 < 3) {
+			var i2 = _g12++;
+			var _g21 = state[i2][j];
+			switch(_g21[1]) {
+			case 0:
+				++numEmpty;
+				break;
+			case 1:
+				++numX;
+				break;
+			case 2:
+				++numO;
+				break;
+			}
+		}
+		if(thisPlayer == BoardSpace.X && numX == 2 && numEmpty == 1) {
+			++numAlmosts;
+		} else if(thisPlayer == BoardSpace.X && numO == 2 && numEmpty == 1) {
+			--numAlmosts;
+		} else if(thisPlayer == BoardSpace.O && numO == 2 && numEmpty == 1) {
+			++numAlmosts;
+		} else if(thisPlayer == BoardSpace.O && numX == 2 && numEmpty == 1) {
+			--numAlmosts;
+		}
+	}
+	return numAlmosts;
 };
 Mechanics.getAvailableMoves = function(state,player) {
 	var moves = [];
@@ -312,10 +369,7 @@ var minimax_Minimax = function() { };
 minimax_Minimax.__name__ = true;
 minimax_Minimax.calculate = function(depth,state,player,score,moves,newState) {
 	var currentScore = score(state,player);
-	if(depth == 0) {
-		return { move : null, score : currentScore};
-	}
-	if(Math.abs(currentScore) > 0.001) {
+	if(depth == 0 || currentScore == Infinity || currentScore == -Infinity) {
 		return { move : null, score : currentScore};
 	}
 	var possibleMoves = moves(state,player);

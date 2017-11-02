@@ -43,8 +43,11 @@ class Minimax {
      */
     public static function calculate<State, Move>(depth:Int, state:State, player:Player, score:ScoreFunction<State>, moves:MoveFunction<State, Move>, newState:StateFunction<State, Move>):MinimaxResult<Move> {
         var currentScore:Float = score(state, player);
-        if(depth == 0) return { move: null, score: currentScore };
-        if(Math.abs(currentScore) > 0.001) return { move: null, score: currentScore };
+        if(   depth == 0
+           || currentScore == Math.POSITIVE_INFINITY
+           || currentScore == Math.NEGATIVE_INFINITY) {
+                return { move: null, score: currentScore };
+           }
 
         var possibleMoves:Array<Move> = moves(state, player);
         if(possibleMoves.length == 0) return { move: null, score: score(state, player) };

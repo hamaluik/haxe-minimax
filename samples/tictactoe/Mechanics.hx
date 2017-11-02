@@ -29,32 +29,69 @@ class Mechanics {
         for(i in 0...3) {
             // rows
             if(state[i][0] == thisPlayer && state[i][1] == thisPlayer && state[i][2] == thisPlayer) {
-                return 1;
+                return Math.POSITIVE_INFINITY;
             }
             else if(state[i][0] == otherPlayer && state[i][1] == otherPlayer && state[i][2] == otherPlayer) {
-                return -1;
+                return Math.NEGATIVE_INFINITY;
             }
 
             // columns
             if(state[0][i] == thisPlayer && state[1][i] == thisPlayer && state[2][i] == thisPlayer) {
-                return 1;
+                return Math.POSITIVE_INFINITY;
             }
             if(state[0][i] == otherPlayer && state[1][i] == otherPlayer && state[2][i] == otherPlayer) {
-                return -1;
+                return Math.NEGATIVE_INFINITY;
             }
         }
         // diagonals
         if(state[0][0] == thisPlayer && state[1][1] == thisPlayer && state[2][2] == thisPlayer)
-            return 1;
+            return Math.POSITIVE_INFINITY;
         else if(state[0][0] == otherPlayer && state[1][1] == otherPlayer && state[2][2] == otherPlayer)
-            return -1;
+            return Math.NEGATIVE_INFINITY;
         if(state[0][2] == thisPlayer && state[1][1] == thisPlayer && state[2][0] == thisPlayer)
-            return 1;
+            return Math.POSITIVE_INFINITY;
         else if(state[0][2] == otherPlayer && state[1][1] == otherPlayer && state[2][0] == otherPlayer)
-            return -1;
+            return Math.NEGATIVE_INFINITY;
 
         // no winner yet
-        return 0;
+        // calculate a heuristic based on our layout
+        var numAlmosts:Int = 0;
+        for(j in 0...3) {
+            // rows
+            var numX:Int = 0;
+            var numEmpty:Int = 0;
+            var numO:Int = 0;
+            for(i in 0...3) {
+                switch(state[j][i]) {
+                    case Empty: numEmpty++;
+                    case X: numX++;
+                    case O: numO++;
+                }
+            }
+                 if(thisPlayer == X && numX == 2 && numEmpty == 1) numAlmosts++;
+            else if(thisPlayer == X && numO == 2 && numEmpty == 1) numAlmosts--;
+            else if(thisPlayer == O && numO == 2 && numEmpty == 1) numAlmosts++;
+            else if(thisPlayer == O && numX == 2 && numEmpty == 1) numAlmosts--;
+
+            // columns
+            numX = 0;
+            numEmpty = 0;
+            numO = 0;
+            for(i in 0...3) {
+                switch(state[i][j]) {
+                    case Empty: numEmpty++;
+                    case X: numX++;
+                    case O: numO++;
+                }
+            }
+                 if(thisPlayer == X && numX == 2 && numEmpty == 1) numAlmosts++;
+            else if(thisPlayer == X && numO == 2 && numEmpty == 1) numAlmosts--;
+            else if(thisPlayer == O && numO == 2 && numEmpty == 1) numAlmosts++;
+            else if(thisPlayer == O && numX == 2 && numEmpty == 1) numAlmosts--;
+        }
+
+        // TODO: diagonals
+        return numAlmosts;
     }
 
     public static function getAvailableMoves(state:Board, player:Player):Array<Move> {
